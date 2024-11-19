@@ -20,6 +20,7 @@ We assume that the data is sent in that csv file in a ascending time order.
 **How to Run the program**
 
 We need to set the environment variable FXDATA_CSV to the path of the CSV file where we store the FX data to be processed.
+Load the maven project in the IntelliJ and run Main.java
 
 **Further improvements**
 
