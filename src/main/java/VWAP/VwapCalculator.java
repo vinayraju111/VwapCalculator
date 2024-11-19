@@ -21,13 +21,12 @@ public class VwapCalculator implements Runnable{
                     System.out.println("Terminating the Calculator");
                     return ;
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-                String curentTime = LocalTime.now().format(formatter);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
+                String curentTime = LocalTime.now().toString();
 
                 System.out.println("Calculating VWAP for past hour. Current time: " + curentTime);
                 String[] timetokens = curentTime.split(":");
-                String[] timeSubToken = timetokens[1].split(" ");
-                mVwapAggregator.CalculateVwap(Integer.parseInt(timetokens[0]), Integer.parseInt(timeSubToken[0]));
+                mVwapAggregator.CalculateVwap(Integer.parseInt(timetokens[0]), Integer.parseInt(timetokens[1]));
         }
     }
 

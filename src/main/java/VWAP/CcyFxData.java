@@ -29,6 +29,9 @@ public class CcyFxData {
      }
      public double AggregatedPriceVolume(int hh, int mm) {
          synchronized (mCcyFxDataLock) {
+             // past one hour data need to be evaluated any other data should be ignored
+             // if current time is 4:30, we will check the data for 4:00 to 4:30
+             // and 3:31 to 3:59
              if ((mHh == hh && mMm <= mm) || (mHh == hh - 1 && mMm > mm)){
                  return mAggregatedPriceVolume;
              }
