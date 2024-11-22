@@ -29,6 +29,7 @@ Currently we read the FX data from one stream (CSV file), if it is ok to feed mu
 **Testing details**
 
 Tested the program with a CSV file of 150 MB data.
+Added Unit tests using JUnit framework.
 
 
 ![TestEvidence 150MB CSV file](https://github.com/user-attachments/assets/c454e7e9-879a-4182-880b-9a6b328e0852)
