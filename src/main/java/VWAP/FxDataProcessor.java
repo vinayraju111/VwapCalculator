@@ -30,8 +30,9 @@ public class FxDataProcessor implements Runnable {
             } catch (InterruptedException e) {
                 System.out.println("Thread Interrupted . Stopping FxMonitor");
                 break;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("An error occurred while reading the file : " + e.getMessage());
+                break;
             }
         }
     }
