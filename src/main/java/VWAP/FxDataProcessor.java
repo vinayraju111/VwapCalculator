@@ -3,7 +3,6 @@ package VWAP;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
 
 //FxDataProcessor will open the Csv file and read line by line in a thread
 // once it finishes the entire file it keep on looking for new lines.
@@ -36,7 +35,7 @@ public class FxDataProcessor implements Runnable {
             }
         }
     }
-    private void processFxData(String line){
+    public void processFxData(String line){
         try {
             String[] tokens = line.split(",");
             if (tokens.length == 4) {
@@ -45,14 +44,14 @@ public class FxDataProcessor implements Runnable {
                 double price = Double.parseDouble(tokens[2]);
                 double volume = Double.parseDouble(tokens[3]);
                 String[] timetokens = time.split(":");
-                int hh = Integer.parseInt(timetokens[0]);
+                int hour = Integer.parseInt(timetokens[0]);
                 String[] timeSubToken = timetokens[1].split(" ");
-                int mm = Integer.parseInt(timeSubToken[0]);
+                int minute = Integer.parseInt(timeSubToken[0]);
                 // we will convert the hour into 24 hour format so that it would be
                 // easy to save the compressed format for the whole day
                 if (timeSubToken[1].equalsIgnoreCase("PM"))
-                    hh += 12;
-                mVwapAggregator.processFxDataUpdate(ccyPair, price, volume, hh, mm);
+                    hour += 12;
+                mVwapAggregator.processFxDataUpdate(ccyPair, price, volume, hour, minute);
             }
         }catch (Exception e){
             System.out.println("Error occurred while parsing the line " + line);

@@ -23,7 +23,7 @@ public class VwapAggregator {
                  mFxData.put(ccyPair, new CcyFxData[60]);
                  CcyFxData[] ccyFxData = mFxData.get(ccyPair);
                  for (int i = 0; i < 60; i++)
-                     ccyFxData[i] = new CcyFxData();
+                     ccyFxData[i] = new CcyFxData(i);
              }
              return mFxData.get(ccyPair);
          }
@@ -35,30 +35,39 @@ public class VwapAggregator {
             return new Vector<>(mFxData.keySet());
         }
     }
-    public void  CalculateVwap(int hh, int mm){
+    public HashMap<String, Double>  CalculateVwap(int hour, int minute){
         Vector<String> ccyPairs = GetCcyPairs();
+
+        HashMap<String, Double> vwapValues = new HashMap<>();
+
         for (String ccyPair: ccyPairs) {
             CcyFxData[] ccyFxData = GetCcyFxDataList(ccyPair);
 
             double totalPriceVolume = 0;
             double totalVolume = 0;
             for (CcyFxData ccyFxDatum : ccyFxData) {
-                totalPriceVolume += ccyFxDatum.AggregatedPriceVolume(hh, mm);
-                totalVolume += ccyFxDatum.AggregatedVolume(hh, mm);
+                totalPriceVolume += ccyFxDatum.AggregatedPriceVolume(hour, minute);
+                totalVolume += ccyFxDatum.AggregatedVolume(hour, minute);
             }
             //calculate the vwap only if totalVolume is not zero.
             if (totalVolume != 0) {
-                System.out.println(ccyPair + ":" + (totalPriceVolume / totalVolume));
+                vwapValues.put(ccyPair, (totalPriceVolume / totalVolume));
             }
         }
+        return vwapValues;
     }
 
-    public void processFxDataUpdate(String ccyPair, double price, double volume, int hh, int mm)
+    public void processFxDataUpdate(String ccyPair, double price, double volume, int hour, int minute)
     {
+        if (ccyPair.isEmpty())
+        {
+            System.out.println("Empty currency pair received! Ignore the request.");
+            return;
+        }
         CcyFxData[] ccyFxDataList = GetCcyFxDataList(ccyPair);
         // Ignore all records which have invalid minute time stamp.
-        if (mm<60 && mm>0){
-            ccyFxDataList[mm].ProcessFxDataUpdate(price, volume,hh, mm);
+        if (minute<60 && minute>0){
+            ccyFxDataList[minute].ProcessFxDataUpdate(price, volume, hour);
         }
     }
 }

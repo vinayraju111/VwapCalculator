@@ -2,6 +2,7 @@ package VWAP;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class VwapCalculator implements Runnable{
@@ -26,7 +27,11 @@ public class VwapCalculator implements Runnable{
 
                 System.out.println("Calculating VWAP for past hour. Current time: " + curentTime);
                 String[] timetokens = curentTime.split(":");
-                mVwapAggregator.CalculateVwap(Integer.parseInt(timetokens[0]), Integer.parseInt(timetokens[1]));
+                HashMap<String, Double> vwapValues = mVwapAggregator.CalculateVwap(Integer.parseInt(timetokens[0]), Integer.parseInt(timetokens[1]));
+                for(String ccyPair: vwapValues.keySet() )
+                {
+                    System.out.println(ccyPair + ": " + vwapValues.get(ccyPair));
+                }
         }
     }
 
