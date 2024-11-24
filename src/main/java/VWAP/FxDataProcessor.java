@@ -35,27 +35,35 @@ public class FxDataProcessor implements Runnable {
             }
         }
     }
-    public void processFxData(String line){
+    public static FxDataStreamObject retrieveFxData(String line){
         try {
+            // stream should be in the below format
+            // 10:30 AM, USD/AUD, 10, 1000
             String[] tokens = line.split(",");
             if (tokens.length == 4) {
+
                 String time = tokens[0];
                 String ccyPair = tokens[1].toUpperCase();
                 double price = Double.parseDouble(tokens[2]);
                 double volume = Double.parseDouble(tokens[3]);
-                String[] timetokens = time.split(":");
-                int hour = Integer.parseInt(timetokens[0]);
-                String[] timeSubToken = timetokens[1].split(" ");
+
+                String[] timeTokens = time.split(":");
+                int hour = Integer.parseInt(timeTokens[0]);
+                String[] timeSubToken = timeTokens[1].split(" ");
                 int minute = Integer.parseInt(timeSubToken[0]);
                 // we will convert the hour into 24 hour format so that it would be
                 // easy to save the compressed format for the whole day
-                if (timeSubToken[1].equalsIgnoreCase("PM"))
+                if (timeSubToken[1].equalsIgnoreCase("PM") && hour != 12)
                     hour += 12;
-                mVwapAggregator.processFxDataUpdate(ccyPair, price, volume, hour, minute);
+                if (timeSubToken[1].equalsIgnoreCase("AM") && hour == 12)
+                    hour = 0;
+
+                return new FxDataStreamObject(ccyPair, hour, minute, price, volume);
             }
         }catch (Exception e){
             System.out.println("Error occurred while parsing the line " + line);
         }
+        return new FxDataStreamObject();
     }
     private void readMarketDataFromCsv() throws IOException {
 
@@ -65,7 +73,9 @@ public class FxDataProcessor implements Runnable {
             String line;
             while ((line = br.readLine()) != null) {
                 lastKnownPosition += line.length() + 2;
-                processFxData(line);
+                FxDataStreamObject obj = retrieveFxData(line);
+                mVwapAggregator.processFxDataUpdate(obj);
+
             }
             
         } catch (IOException e) {

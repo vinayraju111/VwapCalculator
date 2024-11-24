@@ -57,17 +57,17 @@ public class VwapAggregator {
         return vwapValues;
     }
 
-    public void processFxDataUpdate(String ccyPair, double price, double volume, int hour, int minute)
+    public void processFxDataUpdate(FxDataStreamObject obj)
     {
-        if (ccyPair.isEmpty())
+        if (obj.mCcyPair.isEmpty())
         {
             System.out.println("Empty currency pair received! Ignore the request.");
             return;
         }
-        CcyFxData[] ccyFxDataList = GetCcyFxDataList(ccyPair);
+        CcyFxData[] ccyFxDataList = GetCcyFxDataList(obj.mCcyPair);
         // Ignore all records which have invalid minute time stamp.
-        if (minute<60 && minute>0){
-            ccyFxDataList[minute].ProcessFxDataUpdate(price, volume, hour);
+        if (obj.mMinute<60 && obj.mMinute>0){
+            ccyFxDataList[obj.mMinute].ProcessFxDataUpdate(obj.mPrice, obj.mVolume, obj.mHour);
         }
     }
 }
