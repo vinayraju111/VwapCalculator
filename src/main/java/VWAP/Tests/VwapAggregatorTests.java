@@ -1,6 +1,8 @@
 package VWAP.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import VWAP.FxDataStreamObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import VWAP.VwapAggregator;
@@ -18,17 +20,19 @@ public class VwapAggregatorTests {
     @Test
     public void TestDictionaryCreation()
     {
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10, 100, 10, 5);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10, 100, 10, 5);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10, 100, 10, 6);
-        vwapAggregator.processFxDataUpdate("USD/SGD", 11, 100, 10, 15);
-        vwapAggregator.processFxDataUpdate("USD/SGD", 11, 100, 10, 15);
-        vwapAggregator.processFxDataUpdate("USD/SGD", 11, 100, 10, 16);
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 5, 10, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 5, 10, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 6, 10, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/SGD", 10, 15, 11, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/SGD", 10, 15, 11, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/SGD", 10, 16, 11, 100));
+
 
         // the following requests should be ignored
-        vwapAggregator.processFxDataUpdate("", 10, 100, 10, 5);
-        vwapAggregator.processFxDataUpdate("", 10, 100, 10, 5);
-        vwapAggregator.processFxDataUpdate("", 10, 100, 10, 6);
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("", 10, 5, 11, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("", 10, 5, 11, 100));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("", 10, 6, 11, 100));
+
 
         HashMap<String, Double> vwapValues = vwapAggregator.CalculateVwap(10, 6);
         assertEquals(1, vwapValues.size());
@@ -52,24 +56,24 @@ public class VwapAggregatorTests {
     @Test
     public void TestVWAPCalculation()
     {
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10, 100, 10, 5);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.1, 110, 10, 5);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.2, 120, 10, 15);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.4, 140, 10, 15);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.1, 150, 10, 16);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.2, 194, 10, 17);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 9.9, 100, 10, 25);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 9.8, 110, 10, 25);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.5, 130, 10, 32);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.4, 110, 10, 33);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.2, 99, 10, 39);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 12, 22, 10, 45);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 11.1, 56, 10, 52);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.4, 66, 10, 54);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 12.9, 10, 10, 55);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10.2, 45, 10, 55);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 11.2, 11, 11, 3);
-        vwapAggregator.processFxDataUpdate("USD/AUD", 10, 140, 11, 4);
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 5,  10,   100    ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 5,  10.1, 110    ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 15, 10.2, 120   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 15, 10.4, 140   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 16, 10.1, 150   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 17, 10.2, 194   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 25, 9.9,  100   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 25, 9.8,  110   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 32, 10.5, 130   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 33, 10.4, 110   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 39, 10.2, 99   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 45, 12,   22   ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 52, 11.1, 56    ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 54, 10.4, 66    ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 55, 12.9, 10    ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 10, 55, 10.2, 45    ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 11, 3,  11.2, 11     ));
+        vwapAggregator.processFxDataUpdate(new FxDataStreamObject("USD/AUD", 11, 4,  10,   140    ));
 
         /* For 11:04 we consider all the above fx data updates for USD/AUD
          * Aggregated volume = 1713
@@ -146,10 +150,10 @@ public class VwapAggregatorTests {
         for (int i =0; i < nThreads; i++)
         {
             if (i % 2 == 0) {
-                threads[i] = new Thread(() -> vwapAggregator.processFxDataUpdate(ccyPair1, price, volume, 12, 30));
+                threads[i] = new Thread(() -> vwapAggregator.processFxDataUpdate(new FxDataStreamObject(ccyPair1, 12, 30, price, volume)));
             }
             else {
-                threads[i] = new Thread(() -> vwapAggregator.processFxDataUpdate(ccyPair2, price, volume, 12, 30));
+                threads[i] = new Thread(() -> vwapAggregator.processFxDataUpdate(new FxDataStreamObject(ccyPair2, 12, 30, price, volume)));
             }
         }
         for (int i =0; i < nThreads; i++)
